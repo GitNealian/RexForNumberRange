@@ -1,11 +1,11 @@
-package cn.nealian.RexForNumRange.engine;
+package cn.nealian.RexForNumRange.generator;
 
 import org.junit.Before;
 
 import javax.script.ScriptEngine;
 
-public class FloatRangeRexGenerateEngineSpec {
-    private FloatRangeRexGenerateEngine engine;
+public class FloatRangeRexGeneratorSpec {
+    private FloatRangeRexGenerator engine;
     private ScriptEngine mockScriptEngine;
 
     @Before

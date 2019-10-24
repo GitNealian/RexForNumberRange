@@ -1,4 +1,4 @@
-package cn.nealian.RexForNumRange.engine;
+package cn.nealian.RexForNumRange.generator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,17 +9,15 @@ import javax.script.ScriptException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class IntegerRangeRexGenerateEngineSpec {
-    private IntegerRangeRexGenerateEngine rexEngine;
+public class IntegerRangeRexGeneratorSpec {
+    private IntegerRangeRexGenerator rexEngine;
     private ScriptEngine nashorn;
 
     @Before
     public void init() throws ScriptException {
-//        nashorn = new ScriptEngineManager().getEngineByName("nashorn");
-//        nashorn.eval(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("RegNumericRange.js")));
         nashorn = mock(ScriptEngine.class);
         doReturn("").when(nashorn).eval(any(String.class));
-        rexEngine = new IntegerRangeRexGenerateEngine(nashorn);
+        rexEngine = new IntegerRangeRexGenerator(nashorn);
     }
 
     @Test

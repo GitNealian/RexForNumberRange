@@ -1,12 +1,12 @@
-package cn.nealian.RexForNumRange.engine;
+package cn.nealian.RexForNumRange.generator;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-public class IntegerRangeRexGenerateEngine {
+public class IntegerRangeRexGenerator {
     private ScriptEngine engine;
 
-    public IntegerRangeRexGenerateEngine(ScriptEngine engine) {
+    public IntegerRangeRexGenerator(ScriptEngine engine) {
         this.engine = engine;
     }
 

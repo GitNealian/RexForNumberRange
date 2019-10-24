@@ -1,4 +1,4 @@
-package cn.nealian.RexForNumRange.engine;
+package cn.nealian.RexForNumRange.generator;
 
 import cn.nealian.RexForNumRange.model.NumberRange;
 import org.junit.BeforeClass;
@@ -20,21 +20,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author zhukejia
  */
 @RunWith(Theories.class)
-public class FloatRangeRexGenerateEngineTest {
-    private static FloatRangeRexGenerateEngine engine;
-    private static IntegerRangeRexGenerateEngine integerEngine;
+public class FloatRangeRexGeneratorTest {
+    private static FloatRangeRexGenerator generator;
+    private static IntegerRangeRexGenerator integerGenerator;
 
     @BeforeClass
     public static void setUp() {
         ScriptEngine nashorn = new ScriptEngineManager().getEngineByName("nashorn");
         try {
-            nashorn.eval(new InputStreamReader(Objects.requireNonNull(FloatRangeRexGenerateEngineTest.class.getClassLoader()
+            nashorn.eval(new InputStreamReader(Objects.requireNonNull(FloatRangeRexGeneratorTest.class.getClassLoader()
                     .getResourceAsStream("RegNumericRange.js"))));
         } catch (ScriptException e) {
             e.printStackTrace();
         }
-        integerEngine = new IntegerRangeRexGenerateEngine(nashorn);
-        engine = new FloatRangeRexGenerateEngine(integerEngine);
+        integerGenerator = new IntegerRangeRexGenerator(nashorn);
+        generator = new FloatRangeRexGenerator(integerGenerator);
     }
 
 
@@ -53,7 +53,7 @@ public class FloatRangeRexGenerateEngineTest {
     @Theory
     public void testGenerateResult(NumberRange range, String number) {
         try {
-            boolean testResult = number.matches(engine.generate(range));
+            boolean testResult = number.matches(generator.generate(range));
             assertThat(testResult,
                     equalTo(isNumberInRange(number, range)));
         } catch (ScriptException e) {
