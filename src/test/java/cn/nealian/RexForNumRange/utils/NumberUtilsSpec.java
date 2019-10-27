@@ -18,16 +18,16 @@ public class NumberUtilsSpec {
 
     @Test
     public void testGetIntegerPartResult() {
-        assertThat(NumberUtils.getIntegerPart(10.99), equalTo(10));
+        assertThat(NumberUtils.getIntegerPart(10.99), equalTo(10L));
     }
 
     @Test
     public void testGetDecimalPartResultWhenPlacesBigger() {
-        assertThat(NumberUtils.getDecimalPart(10.9, 2), equalTo(90));
+        assertThat(NumberUtils.getDecimalPart(10.9, 2, true), equalTo(90L));
     }
 
     @Test
     public void testGetDecimalPartResultWhenPlacesSmaller() {
-        assertThat(NumberUtils.getDecimalPart(10.999, 2), equalTo(99));
+        assertThat(NumberUtils.getDecimalPart(10.999, 2, true), equalTo(99L));
     }
 }

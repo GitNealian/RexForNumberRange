@@ -8,22 +8,35 @@ import static cn.nealian.RexForNumRange.utils.NumberUtils.getDecimalPart;
 import static cn.nealian.RexForNumRange.utils.NumberUtils.getIntegerPart;
 
 public class FloatRangeRexGenerator {
-    private IntegerRangeRexGenerator generator;
+    private IRexBuilder rb;
+    private static FloatRangeRexGenerator generator;
 
-    public FloatRangeRexGenerator(IntegerRangeRexGenerator generator) {
-        this.generator = generator;
+    private FloatRangeRexGenerator() {
+    }
+
+    public void setRexBuilder(IRexBuilder builder) {
+        this.rb = builder;
+    }
+
+    public static FloatRangeRexGenerator getFloatRangeRexGenerator() {
+        if (generator == null) {
+            generator = new FloatRangeRexGenerator();
+        }
+        return generator;
     }
 
     public String generate(NumberRange range) throws ScriptException {
-        RexBuilder rb = new RexBuilder(generator);
+        if (rb == null) {
+            throw new RuntimeException("No RexBuilder set!");
+        }
+        rb.createNew();
         if (range.getDecimalPlaces() == 0) {
             rb.range(getIntegerPart(range.getStart()), getIntegerPart(range.getEnd()));
         } else {
-            StringBuilder sb = new StringBuilder();
             if (range.integerLength() > 1) {
                 rb.number(getIntegerPart(range.getStart()))
                         .dot()
-                        .rangeToCeiling(getDecimalPart(range.getStart(), range.getDecimalPlaces()), range.getDecimalPlaces())
+                        .rangeToCeiling(getDecimalPart(range.getStart(), range.getDecimalPlaces(), true), range.getDecimalPlaces())
                         .or()
                         .range(getIntegerPart(range.getStart()) + 1, getIntegerPart(range.getEnd()) - 1)
                         .dot()
@@ -31,22 +44,22 @@ public class FloatRangeRexGenerator {
                         .or()
                         .number(getIntegerPart(range.getEnd()))
                         .dot()
-                        .rangeToCeiling(getDecimalPart(range.getEnd(), range.getDecimalPlaces()), range.getDecimalPlaces());
+                        .range(0, getDecimalPart(range.getEnd(), range.getDecimalPlaces(), true));
             } else if (range.isDecimalPartChangeOnly()) {
                 rb.number(getIntegerPart(range.getStart()))
                         .dot()
-                        .range(getDecimalPart(range.getStart(), range.getDecimalPlaces()),
-                                getDecimalPart(range.getEnd(), range.getDecimalPlaces()));
+                        .range(getDecimalPart(range.getStart(), range.getDecimalPlaces(), true),
+                                getDecimalPart(range.getEnd(), range.getDecimalPlaces(), true));
             } else {
                 rb.number(getIntegerPart(range.getStart()))
                         .dot()
-                        .rangeToCeiling(getDecimalPart(range.getStart(), range.getDecimalPlaces()), range.getDecimalPlaces())
+                        .rangeToCeiling(getDecimalPart(range.getStart(), range.getDecimalPlaces(), true), range.getDecimalPlaces())
                         .or()
                         .number(getIntegerPart(range.getEnd()))
                         .dot()
-                        .rangeToCeiling(getDecimalPart(range.getEnd(), range.getDecimalPlaces()), range.getDecimalPlaces());
+                        .range(0, getDecimalPart(range.getEnd(), range.getDecimalPlaces(), true));
             }
         }
-        return rb.toString();
+        return rb.build();
     }
 }

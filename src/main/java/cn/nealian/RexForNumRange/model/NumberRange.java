@@ -23,10 +23,6 @@ public class NumberRange {
         this.decimalPlaces = decimalPlaces;
     }
 
-    public double length() {
-        return end - start;
-    }
-
     public double integerLength() {
         return round(end, 0) - round(start, 0);
     }
@@ -34,7 +30,6 @@ public class NumberRange {
     public boolean isDecimalPartChangeOnly() {
         return integerLength() == 0;
     }
-
 
     public double getStart() {
         return start;

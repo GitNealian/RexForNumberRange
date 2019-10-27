@@ -1,5 +1,7 @@
 package cn.nealian.RexForNumRange.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -14,11 +16,16 @@ public class NumberUtils {
         return new BigDecimal(Double.toString(value)).setScale(places, RoundingMode.FLOOR).doubleValue();
     }
 
-    public static int getIntegerPart(double number) {
+    public static long getIntegerPart(double number) {
         return (int) round(number, 0);
     }
 
-    public static int getDecimalPart(double number, int places) {
-        return getIntegerPart((number - getIntegerPart(number)) * pow(10, places));
+    public static long getDecimalPart(double number, int places, boolean pad) {
+        String decimal = String.valueOf(number).split("\\.")[1];
+        decimal = decimal.substring(0, Math.min(places, decimal.length()));
+        if (pad) {
+            decimal = StringUtils.rightPad(decimal, places, '0');
+        }
+        return Long.parseLong(decimal);
     }
 }

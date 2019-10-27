@@ -5,7 +5,7 @@ import java.util.*;
 public class FakeRexBuilder implements IRexBuilder {
 
     private StringBuilder pattern;
-    private List<Integer> elements;
+    private List<Long> elements;
     private int places;
 
     private static List<String> PATTERNS = Arrays.asList(
@@ -22,7 +22,7 @@ public class FakeRexBuilder implements IRexBuilder {
     }
 
     @Override
-    public IRexBuilder number(int number) {
+    public IRexBuilder number(long number) {
         this.pattern.append("N");
         this.elements.add(number);
         return this;
@@ -35,13 +35,13 @@ public class FakeRexBuilder implements IRexBuilder {
     }
 
     @Override
-    public IRexBuilder rangeToCeiling(int start, int decimalPlaces) {
+    public IRexBuilder rangeToCeiling(long start, int decimalPlaces) {
         places = decimalPlaces;
         return range(start, Integer.parseInt(String.join("", Collections.nCopies(decimalPlaces, "9"))));
     }
 
     @Override
-    public IRexBuilder range(int min, int max) {
+    public IRexBuilder range(long min, long max) {
         this.pattern.append("[]");
         this.elements.add(min);
         this.elements.add(max);
@@ -61,18 +61,18 @@ public class FakeRexBuilder implements IRexBuilder {
         return this;
     }
 
-    public Range deRange(int start, int end) {
+    public Range deRange(long start, long end) {
         return new Range(start, end);
     }
 
-    public Range deRange(int number, int start, int end) {
+    public Range deRange(long number, long start, long end) {
         return new Range(
                 Double.parseDouble(number + "." + String.valueOf(start)),
                 Double.parseDouble(number + "." + String.valueOf(end))
         );
     }
 
-    public Range deRange(int startInteger, int endInteger, int startDecimal, int endDecimal) {
+    public Range deRange(long startInteger, long endInteger, int startDecimal, int endDecimal) {
         return new Range(
                 Double.parseDouble(startInteger + "." + String.valueOf(startDecimal)),
                 Double.parseDouble(endInteger + "." + String.valueOf(endDecimal))
@@ -101,7 +101,7 @@ public class FakeRexBuilder implements IRexBuilder {
     @Override
     public String build() {
         List<Range> ranges = new ArrayList<>();
-        Iterator<Integer> ele = elements.iterator();
+        Iterator<Long> ele = elements.iterator();
         for (String s : this.pattern.toString().split("\\|")) {
             switch (s) {
                 case "[]":
@@ -111,7 +111,7 @@ public class FakeRexBuilder implements IRexBuilder {
                     ranges.add(deRange(ele.next(), ele.next(), ele.next()));
                     break;
                 case "[].[]":
-                    ranges.add(deRange(ele.next(), ele.next(), ele.next(), ele.next()));
+                    ranges.add(deRange(ele.next(), ele.next(), ele.next().intValue(), ele.next().intValue()));
                     break;
                 default:
                     throw new RuntimeException();

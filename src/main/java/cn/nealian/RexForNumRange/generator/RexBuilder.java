@@ -3,7 +3,7 @@ package cn.nealian.RexForNumRange.generator;
 import javax.script.ScriptException;
 import java.util.Collections;
 
-public class RexBuilder {
+public class RexBuilder implements IRexBuilder {
     private StringBuilder sb;
     private IntegerRangeRexGenerator engine;
 
@@ -12,37 +12,49 @@ public class RexBuilder {
         this.engine = engine;
     }
 
-    public RexBuilder number(int number) {
-        sb.append(number);
-        return this;
-    }
-
-    public RexBuilder rangeFull(int decimalPlaces) {
-        sb.append(String.format("[0-9]{%d}", decimalPlaces));
-        return this;
-    }
-
-    public RexBuilder rangeToCeiling(int start, int decimalPlaces) throws ScriptException {
-        return range(start, Integer.parseInt(String.join("", Collections.nCopies(decimalPlaces, "9"))));
-    }
-
-    public RexBuilder range(int min, int max) throws ScriptException {
-        sb.append(engine.generate(min, max));
-        return this;
-    }
-
-    public RexBuilder or() {
-        sb.append("|");
-        return this;
-    }
-
-    public RexBuilder dot() {
-        sb.append("\\.");
+    @Override
+    public IRexBuilder createNew() {
+        this.sb = new StringBuilder();
         return this;
     }
 
     @Override
-    public String toString() {
+    public IRexBuilder number(long number) {
+        sb.append(number);
+        return this;
+    }
+
+    @Override
+    public IRexBuilder rangeFull(int decimalPlaces) {
+        sb.append(String.format("[0-9]{%d}", decimalPlaces));
+        return this;
+    }
+
+    @Override
+    public IRexBuilder rangeToCeiling(long start, int decimalPlaces) throws ScriptException {
+        return range(start, Long.parseLong(String.join("", Collections.nCopies(decimalPlaces, "9"))));
+    }
+
+    @Override
+    public IRexBuilder range(long min, long max) throws ScriptException {
+        sb.append(engine.generate(min, max));
+        return this;
+    }
+
+    @Override
+    public IRexBuilder or() {
+        sb.append("|");
+        return this;
+    }
+
+    @Override
+    public IRexBuilder dot() {
+        sb.append("\\.(?!$)");
+        return this;
+    }
+
+    @Override
+    public String build() {
         return sb.toString();
     }
 }

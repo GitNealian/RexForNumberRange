@@ -10,9 +10,12 @@ public class IntegerRangeRexGenerator {
         this.engine = engine;
     }
 
-    public String generate(int min, int max) throws ScriptException {
+    public String generate(long min, long max) throws ScriptException {
         if (min < 0 || max < min) {
             throw new RuntimeException("[min] should be bigger than zero and smaller than [max]");
+        }
+        if (min == max) {
+            return "(" + min + ")";
         }
         StringBuilder scriptBuilder = new StringBuilder();
         scriptBuilder.append("new RegNumericRange(")
@@ -20,6 +23,7 @@ public class IntegerRangeRexGenerator {
                 .append(",")
                 .append(max)
                 .append(",{}).generate().pattern");
+        System.out.println(scriptBuilder.toString());
         return (String) engine.eval(scriptBuilder.toString());
     }
 }

@@ -3,27 +3,28 @@
  * Author: Erwin Yusrizal <erwin.yusrizal@gmail.com>
  * Version: 1.0.0
  */
-var RegNumericRange = function() {
+var RegNumericRange = function () {
     function t(r, e, n, s) {
         return null === n && (n = {}),
             this instanceof t ? (this.minValue = r,
                 this.maxValue = e,
                 this.options = this.extend({}, this.defaults, n),
-                void (this.data = {})) : new t(r,e,n,s)
+                void (this.data = {})) : new t(r, e, n, s)
     }
+
     return t.prototype.defaults = {
         MatchWholeWord: !1,
         MatchWholeLine: !1,
         MatchLeadingZero: !1,
         showProcess: !1
     },
-        t.prototype.generate = function(t) {
+        t.prototype.generate = function (t) {
             var r = this.minValue.toString()
                 , e = this.maxValue.toString()
                 , n = []
                 , s = []
                 , i = [];
-            if (!this.minValue || !this.maxValue) {
+            if (this.minValue === undefined || this.maxValue === undefined) {
                 var a = "Minimum & Maximum value is required!";
                 if ("function" == typeof t)
                     return t({
@@ -84,18 +85,18 @@ var RegNumericRange = function() {
                 }) : this.data
         }
         ,
-        t.prototype.setProcess = function(t) {
+        t.prototype.setProcess = function (t) {
             this.data = this.extend({}, this.data, t)
         }
         ,
-        t.prototype.parseStartRange = function(t, r) {
+        t.prototype.parseStartRange = function (t, r) {
             return t = parseInt(t),
                 r = parseInt(r),
                 t.toString().length === r.toString().length ? [[t.toString(), r.toString()]] : (breakPoint = Math.pow(10, t.toString().length) - 1,
                     [[t.toString(), breakPoint.toString()]].concat(this.parseStartRange(breakPoint + 1, r.toString())))
         }
         ,
-        t.prototype.parseEndRange = function(t, r) {
+        t.prototype.parseEndRange = function (t, r) {
             if (1 === t.length)
                 return [t, r];
             if (Array(t.length + 1).join("0") === "0" + t.substr(1)) {
@@ -127,7 +128,7 @@ var RegNumericRange = function() {
             return h
         }
         ,
-        t.prototype.parseIntoRegex = function(t) {
+        t.prototype.parseIntoRegex = function (t) {
             if (!this.isArray(t))
                 throw new Error("Argument needs to be an array!");
             var r = [];
@@ -145,7 +146,7 @@ var RegNumericRange = function() {
             return r
         }
         ,
-        t.prototype.parseIntoPattern = function(t) {
+        t.prototype.parseIntoPattern = function (t) {
             if (this.isArray(t)) {
                 var r = t.join("|");
                 return this.options.MatchWholeLine && this.options.MatchLeadingZero ? "^0*(" + r + ")$" : this.options.MatchLeadingZero ? "0*(" + r + ")" : this.options.MatchWholeLine ? "^(" + r + ")$" : this.options.MatchWholeWord ? "\\b(" + r + ")\\b" : "(" + r + ")"
@@ -154,7 +155,7 @@ var RegNumericRange = function() {
             return this.options.MatchWholeLine && this.options.MatchLeadingZero ? "^0*(" + r + ")$" : this.options.MatchLeadingZero ? "0*(" + r + ")" : this.options.MatchWholeLine ? "^(" + r + ")$" : this.options.MatchWholeWord ? "\\b(" + r + ")\\b" : "(" + r + ")"
         }
         ,
-        t.prototype.reformatArray = function(t) {
+        t.prototype.reformatArray = function (t) {
             for (arrReturn = [],
                      i = 0; i < t.length; i++)
                 for (page = t[i].length / 2,
@@ -165,23 +166,23 @@ var RegNumericRange = function() {
             return arrReturn
         }
         ,
-        t.prototype.fixPair = function(t) {
+        t.prototype.fixPair = function (t) {
             var r = t[0]
                 , e = t[1];
             return this.rjust(r, e.length, "0")
         }
         ,
-        t.prototype.strBreakPoint = function(t) {
+        t.prototype.strBreakPolong = function (t) {
             return this.fixPair([t.toString(), (t + 1).toString()])
         }
         ,
-        t.prototype.rjust = function(t, r, e) {
+        t.prototype.rjust = function (t, r, e) {
             return e = e || " ",
                 e = e.substr(0, 1),
                 t.length < r ? e.repeat(r - t.length) + t : t
         }
         ,
-        t.prototype.extend = function() {
+        t.prototype.extend = function () {
             var t, r, e, n, s, i, a;
             for (i = arguments[0],
                      t = 2 <= arguments.length ? [].slice.call(arguments, 1) : [],
@@ -195,16 +196,16 @@ var RegNumericRange = function() {
             return i
         }
         ,
-        t.prototype.append = function(t, r) {
+        t.prototype.append = function (t, r) {
             return document.querySelector(t) && document.querySelector(t).insertAdjacentHTML("beforeend", r),
                 this
         }
         ,
-        t.prototype.isArray = Array.isArray || function(t) {
+        t.prototype.isArray = Array.isArray || function (t) {
             return "[object Array]" === Object.prototype.toString.call(t)
         }
         ,
-        t.prototype.isNumeric = function(t) {
+        t.prototype.isNumeric = function (t) {
             return !isNaN(parseFloat(t)) && isFinite(t)
         }
         ,

@@ -3,18 +3,19 @@ package cn.nealian.RexForNumRange.generator;
 import javax.script.ScriptException;
 
 public interface IRexBuilder {
-    RexBuilder number(int number);
+    IRexBuilder createNew();
 
-    RexBuilder rangeFull(int decimalPlaces);
+    IRexBuilder number(long number);
 
-    RexBuilder rangeToCeiling(int start, int decimalPlaces) throws ScriptException;
+    IRexBuilder rangeFull(int decimalPlaces);
 
-    RexBuilder range(int min, int max) throws ScriptException;
+    IRexBuilder rangeToCeiling(long start, int decimalPlaces) throws ScriptException;
 
-    RexBuilder or();
+    IRexBuilder range(long min, long max) throws ScriptException;
 
-    RexBuilder dot();
+    IRexBuilder or();
 
-    @Override
-    String toString();
+    IRexBuilder dot();
+
+    String build();
 }

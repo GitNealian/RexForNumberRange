@@ -22,19 +22,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(Theories.class)
 public class FloatRangeRexGeneratorTest {
     private static FloatRangeRexGenerator generator;
-    private static IntegerRangeRexGenerator integerGenerator;
+    private static FloatRangeRexGenerator fakeGenerator;
 
     @BeforeClass
     public static void setUp() {
-        ScriptEngine nashorn = new ScriptEngineManager().getEngineByName("nashorn");
-        try {
-            nashorn.eval(new InputStreamReader(Objects.requireNonNull(FloatRangeRexGeneratorTest.class.getClassLoader()
-                    .getResourceAsStream("RegNumericRange.js"))));
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
-        integerGenerator = new IntegerRangeRexGenerator(nashorn);
-        generator = new FloatRangeRexGenerator(integerGenerator);
+        FloatRangeRexGenerator.getFloatRangeRexGenerator().setRexBuilder(new FakeRexBuilder());
+        fakeGenerator = FloatRangeRexGenerator.getFloatRangeRexGenerator();
     }
 
 
@@ -51,28 +44,12 @@ public class FloatRangeRexGeneratorTest {
     public static String[] numbers = {"99", "123.45", "125.67", "123.55", "124.56", "155.45", "188.56"};
 
     @Theory
-    public void testGenerateResult(NumberRange range, String number) {
+    public void testGenerateResultWithFakeBuilder(NumberRange range) {
         try {
-            boolean testResult = number.matches(generator.generate(range));
-            assertThat(testResult,
-                    equalTo(isNumberInRange(number, range)));
+            assertThat(fakeGenerator.generate(range),
+                    equalTo(range.toString()));
         } catch (ScriptException e) {
             e.printStackTrace();
         }
     }
-
-    private boolean isNumberInRange(String number, NumberRange range) {
-        double numberValue = new Double(number);
-        return numberValue >= range.getStart() && numberValue <= range.getEnd() &&
-                range.getDecimalPlaces() == calDecimalPlacesByPartsSplitByPoint(number);
-    }
-
-    private int calDecimalPlacesByPartsSplitByPoint(String number) {
-        String[] parts = number.split("\\.");
-        if (parts.length == 1) {
-            return 0;
-        }
-        return parts[1].length();
-    }
-
 }
